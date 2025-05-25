@@ -13,7 +13,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 5px;
-      gap: 10px; /* Space between checkbox, text, and quantity input */
+      gap: 10px;
     }
     body, h2, h3, form {
       text-align: center;
@@ -30,49 +30,52 @@
       font-weight: bold;
     }
     body {
-      background-image: url('FallingFruit.gif');
+      background-image: url('background.gif');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      background-color: #f0f0f0; /* Fallback color */
-      color: #ffffff; /* White text for better contrast */
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Text shadow for readability */
+      background-color: #f0f0f0;
+      color: #ffffff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     }
     h2 {
-      color: cyan; /* Cyan color for Pacific Bluffs header */
+      color: cyan;
     }
     .button-group {
       display: flex;
       justify-content: center;
       gap: 10px;
     }
-    /* Optional: Add a semi-transparent overlay for better readability */
     form {
-      background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+      background: rgba(0, 0, 0, 0.5);
       padding: 20px;
       border-radius: 10px;
       max-width: 600px;
       margin: 0 auto;
     }
     .quantity {
-      width: 60px; /* Consistent width for quantity inputs */
-      margin-left: auto; /* Push quantity inputs to the right for alignment */
+      width: 60px;
+      margin-left: auto;
+    }
+    .centered-label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
     }
   </style>
   <script>
     $(document).ready(function () {
-      console.log('jQuery loaded and document ready'); // Debug: Confirm jQuery and DOM readiness
+      console.log('jQuery loaded and document ready');
 
-      // Store clock-in time
       let clockInTime = null;
 
-      // Calculate Totals
       window.calculateTotals = function () {
-        console.log('calculateTotals() triggered'); // Debug: Confirm function is called
+        console.log('calculateTotals() triggered');
         let total = 0;
         const menuItems = $('.menu-item:checked');
-        console.log('Checked items:', menuItems.length); // Debug: Log number of checked items
+        console.log('Checked items:', menuItems.length);
 
         if (menuItems.length === 0) {
           console.log('No items selected');
@@ -82,50 +85,47 @@
         }
 
         menuItems.each(function (index) {
-          console.log(`Processing item ${index + 1}`); // Debug: Track each item
+          console.log(`Processing item ${index + 1}`);
           const $checkbox = $(this);
           const price = parseFloat($checkbox.attr('data-price'));
           const $quantityInput = $checkbox.siblings('.quantity');
           const quantity = parseInt($quantityInput.val()) || 1;
           const discount = parseFloat($('#discount').val()) || 0;
 
-          console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`); // Debug: Log item details
+          console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`);
 
           if (isNaN(price)) {
             console.warn(`Invalid price for item: ${$checkbox.parent().text().trim()}`);
-            return true; // Skip to next item
+            return true;
           }
           if (isNaN(quantity) || quantity <= 0) {
             console.warn(`Invalid quantity (${quantity}) for item: ${$checkbox.parent().text().trim()}`);
-            return true; // Skip to next item
+            return true;
           }
 
           const itemTotal = price * quantity * (1 - discount / 100);
           total += itemTotal;
-          console.log(`Item Total: ${itemTotal.toFixed(2)}`); // Debug: Log item total
+          console.log(`Item Total: ${itemTotal.toFixed(2)}`);
         });
 
         const commission = total * 0.25;
-        console.log(`Final Total: ${total.toFixed(2)}, Commission: ${commission.toFixed(2)}`); // Debug: Log final results
+        console.log(`Final Total: ${total.toFixed(2)}, Commission: ${commission.toFixed(2)}`);
 
         $('#total').text(total.toFixed(2));
         $('#commission').text(commission.toFixed(2));
       };
 
-      // Bind Calculate button
       $('#calculateBtn').on('click', function () {
-        console.log('Calculate button clicked'); // Debug: Confirm button click
+        console.log('Calculate button clicked');
         window.calculateTotals();
       });
 
-      // Verify button exists
       if ($('#calculateBtn').length === 0) {
         console.error('Calculate button (#calculateBtn) not found in DOM');
       } else {
         console.log('Calculate button found in DOM');
       }
 
-      // Submit Form
       window.SubForm = function () {
         console.log('SubForm() triggered');
         const total = $('#total').text().trim();
@@ -211,7 +211,6 @@
         });
       };
 
-      // Reset Form
       window.resetForm = function () {
         console.log('resetForm() triggered');
         $('.menu-item').prop('checked', false);
@@ -220,7 +219,6 @@
         $('#discount').val('0');
       };
 
-      // Clock In
       window.clockIn = function () {
         console.log('clockIn() triggered');
         const employeeName = $('#employeeName').val().trim();
@@ -241,7 +239,7 @@
         }) || 'Unknown Time';
         console.log(`Clock In: Employee: ${employeeName}, Time: ${localTime}`);
         const discordData = {
-          username: 'Pacific Bluffs Clock',
+          username: 'Time Manager',
           embeds: [{
             title: 'Clock In',
             fields: [
@@ -271,7 +269,6 @@
         });
       };
 
-      // Clock Out
       window.clockOut = function () {
         console.log('clockOut() triggered');
         const employeeName = $('#employeeName').val().trim();
@@ -336,7 +333,7 @@
   </script>
 </head>
 <body>
-  <h2>Test Menu</h2>
+  <h2>Pacific Bluffs</h2>
   <form id="menuForm">
     <h3>Fruit</h3>
     <label>
@@ -376,14 +373,14 @@
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <div style="margin-bottom: 30px;"></div>
-    <label for="discount">Select Discount:</label>
+    <label class="centered-label" for="discount">Select Discount:</label>
     <select id="discount">
       <option value="0">No Discount</option>
       <option value="25">25% Discount (Employee Discount)</option>
       <option value="15">15% Discount (PD & EMS)</option>
     </select>
     <div style="margin-bottom: 30px;"></div>
-    <label for="employeeName">Employee Name:</label>
+    <label class="centered-label" for="employeeName">Employee Name:</label>
     <input type="text" id="employeeName" required>
     <div style="margin-bottom: 30px;"></div>
     <p>Total: $<span id="total"></span></p>
