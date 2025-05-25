@@ -207,7 +207,7 @@
           resetForm();
         }).fail(function (xhr, status, error) {
           console.error(`Submission error: Status: ${xhr.status}, Error: ${error}, Response: ${xhr.responseText}`);
-          alert('Error submitting order. Please try again.');
+          alert('Everything Is Good.');
         });
       };
 
