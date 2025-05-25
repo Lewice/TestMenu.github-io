@@ -338,127 +338,41 @@
 <body>
   <h2>Test Menu</h2>
   <form id="menuForm">
-    <h3>Service Items</h3>
+    <h3>Fruit</h3>
     <label>
-      <input type="checkbox" class="menu-item" data-price="8000"> Repair - $8000
+      <input type="checkbox" class="menu-item" data-price="8"> Strawberry - $8
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="6500"> Spark Plugs - $6500
+      <input type="checkbox" class="menu-item" data-price="6"> Banana - $6
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="6500"> Tire Replacement - $6500
+      <input type="checkbox" class="menu-item" data-price="6"> Kiwi - $6
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="6500"> Brake Pads - $6500
+      <input type="checkbox" class="menu-item" data-price="6"> Tomato - $6
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="7000"> Air Filters - $7000
+      <input type="checkbox" class="menu-item" data-price="7"> Watermelon - $7
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="7000"> Engine Oil - $7000
+      <input type="checkbox" class="menu-item" data-price="7"> Bag - $7
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="7000"> Clutch Replacement - $7000
+      <input type="checkbox" class="menu-item" data-price="1"> Melon - $1
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="7000"> Suspension Part - $7000
+      <input type="checkbox" class="menu-item" data-price="2"> Blueberries - $2
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <label>
-      <input type="checkbox" class="menu-item" data-price="25000"> Full Service - $25000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <h3>Standard Options</h3>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="5000"> Tire Smoke - $5000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="8000"> Performance Parts - $8000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="8000"> Extras Kit - $8000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="10000"> Radio - $10000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="20000"> Nos - $20000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="6500"> Headlights - $6500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="6500"> Neon Lights - $6500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="8000"> Body Kits - $8000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="8000"> Respray - $8000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="13500"> Bulletproof Tires - $13500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="7500"> Wheels/Rims - $7500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="0"> Armor/Tint - $0
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="5000"> Stance - $5000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <h3>Transmission Upgrades</h3>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="20000"> Engine - $20000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="12500"> Turbo Charge - $12500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="12500"> Ceramic Brakes - $12500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="12500"> AWD - $12500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="12500"> FWD - $12500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="13500"> Tire Swap - $13500
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="25000"> Advanced Repair Kit - $25000
-      <input type="number" class="quantity" value="1" min="1">
-    </label>
-    <label>
-      <input type="checkbox" class="menu-item" data-price="10000"> Drift Tune Kit - $10000
+      <input type="checkbox" class="menu-item" data-price="1"> Assorted Fruit - $1
       <input type="number" class="quantity" value="1" min="1">
     </label>
     <div style="margin-bottom: 30px;"></div>
