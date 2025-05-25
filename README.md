@@ -30,7 +30,7 @@
       font-weight: bold;
     }
     body {
-      background-image: url('background.gif');
+      background-image: url('FallingFruit.gif');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
