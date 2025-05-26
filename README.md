@@ -333,7 +333,7 @@
   </script>
 </head>
 <body>
-  <h2>Pacific Bluffs</h2>
+  <h2>Test Menu</h2>
   <form id="menuForm">
     <h3>Fruit</h3>
     <label>
