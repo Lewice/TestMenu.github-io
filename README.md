@@ -86,7 +86,7 @@
       let clockInTime = null;
       let isEditMode = false;
       let originalItems = [];
-      let customDiscount = 0; // Store custom discount value
+      let customDiscount = null; // Store custom discount value (null means no custom discount)
 
       // Save original menu items before editing
       function saveOriginalItems() {
@@ -197,8 +197,8 @@
           const parsedDiscount = parseFloat(discountInput);
           if (!isNaN(parsedDiscount) && parsedDiscount >= 0 && parsedDiscount <= 100) {
             customDiscount = parsedDiscount;
-            $('#discount').val('custom');
-            $('#discount option[value="custom"]').text(`Custom Discount (${customDiscount}%)`);
+            // Update dropdown to show custom discount temporarily
+            $('#discount').val('0'); // Reset to "No Discount" to avoid confusion
             console.log(`Custom discount set to ${customDiscount}%`);
             alert(`Custom discount set to ${customDiscount}%`);
             // Recalculate totals if items are selected
@@ -242,7 +242,8 @@
           const price = parseFloat($checkbox.attr('data-price'));
           const $quantityInput = $checkbox.siblings('.quantity');
           const quantity = parseInt($quantityInput.val()) || 1;
-          const discount = $('#discount').val() === 'custom' ? customDiscount : parseFloat($('#discount').val()) || 0;
+          // Use customDiscount if set, otherwise use dropdown value
+          const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
 
           console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`);
 
@@ -308,7 +309,8 @@
         }
         const totalValue = parseFloat(total);
         const commission = parseFloat($('#commission').text());
-        const discount = $('#discount').val() === 'custom' ? customDiscount : parseFloat($('#discount').val()) || 0;
+        // Use customDiscount if set, otherwise use dropdown value
+        const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
         const formData = {
           'Employee Name': employeeName,
           Total: totalValue.toFixed(2),
@@ -369,8 +371,7 @@
         $('.quantity').val(1);
         $('#total, #commission').text('');
         $('#discount').val('0');
-        $('#discount option[value="custom"]').text('Custom Discount');
-        customDiscount = 0;
+        customDiscount = null;
         console.log('Form reset');
       };
 
@@ -537,7 +538,6 @@
       <option value="0">No Discount</option>
       <option value="25">25% Discount (Employee Discount)</option>
       <option value="15">15% Discount (PD & EMS)</option>
-      <option value="custom">Custom Discount</option>
     </select>
     <div style="margin-bottom: 30px;"></div>
     <label class="centered-label" for="employeeName">Employee Name:</label>
