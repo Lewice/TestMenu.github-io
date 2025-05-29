@@ -15,7 +15,7 @@
       margin-bottom: 5px;
       gap: 10px;
     }
-    body, h2, h3, form {
+    body, h2, Norfolk, form {
       text-align: center;
     }
     p {
@@ -64,12 +64,133 @@
       align-items: center;
       width: 100%;
     }
+    .edit-mode input[type="text"] {
+      width: 150px;
+      margin-right: 5px;
+    }
+    .edit-mode input[type="number"] {
+      width: 60px;
+    }
+    .edit-controls {
+      margin-top: 20px;
+      display: none;
+    }
+    .edit-mode .edit-controls {
+      display: flex;
+    }
   </style>
   <script>
     $(document).ready(function () {
       console.log('jQuery loaded and document ready');
 
       let clockInTime = null;
+      let isEditMode = false;
+      let originalItems = [];
+
+      // Save original menu items before editing
+      function saveOriginalItems() {
+        originalItems = [];
+        $('.menu-item').each(function () {
+          const $label = $(this).parent();
+          const name = $label.text().trim().split(' - $')[0];
+          const price = parseFloat($(this).attr('data-price'));
+          originalItems.push({ name, price });
+        });
+      }
+
+      // Toggle edit mode
+      function toggleEditMode() {
+        isEditMode = !isEditMode;
+        if (isEditMode) {
+          saveOriginalItems();
+          $('.menu-item').each(function () {
+            const $label = $(this).parent();
+            const name = $label.text().trim().split(' - $')[0];
+            const price = $(this).attr('data-price');
+            $label.html(
+              `<input type="checkbox" class="menu-item" data-price="${price}">
+               <input type="text" class="edit-name" value="${name}">
+               - $<input type="number" class="edit-price" value="${price}" min="0" step="0.01">
+               <input type="number" class="quantity" value="1" min="1">`
+            );
+          });
+          $('#menuForm').addClass('edit-mode');
+          $('.edit-controls').show();
+        } else {
+          // Restore original display
+          $('.menu-item').each(function (index) {
+            const $label = $(this).parent();
+            const name = originalItems[index].name;
+            const price = originalItems[index].price;
+            $(this).attr('data-price', price);
+            $label.html(
+              `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
+               <input type="number" class="quantity" value="1" min="1">`
+            );
+          });
+          $('#menuForm').removeClass('edit-mode');
+          $('.edit-controls').hide();
+        }
+      }
+
+      // Save edited items
+      function saveEdits() {
+        $('.menu-item').each(function (index) {
+          const $label = $(this).parent();
+          const newName = $label.find('.edit-name').val().trim();
+          const newPrice = parseFloat($label.find('.edit-price').val());
+          if (newName && !isNaN(newPrice) && newPrice >= 0) {
+            originalItems[index] = { name: newName, price: newPrice };
+            $(this).attr('data-price', newPrice);
+            $label.html(
+              `<input type="checkbox" class="menu-item" data-price="${newPrice}"> ${newName} - $${newPrice}
+               <input type="number" class="quantity" value="1" min="1">`
+            );
+          }
+        });
+        isEditMode = false;
+        $('#menuForm').removeClass('edit-mode');
+        $('.edit-controls').hide();
+        console.log('Edits saved:', originalItems);
+        alert('Menu items updated successfully!');
+      }
+
+      // Cancel edits
+      function cancelEdits() {
+        $('.menu-item').each(function (index) {
+          const $label = $(this).parent();
+          const { name, price } = originalItems[index];
+          $(this).attr('data-price', price);
+          $label.html(
+            `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
+             <input type="number" class="quantity" value="1" min="1">`
+          );
+        });
+        isEditMode = false;
+        $('#menuForm').removeClass('edit-mode');
+        $('.edit-controls').hide();
+        console.log('Edits canceled');
+        alert('Changes discarded.');
+      }
+
+      // Keypress event for Ctrl+Shift+E
+      $(document).on('keydown', function (e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+          console.log('Ctrl+Shift+E pressed, toggling edit mode');
+          toggleEditMode();
+        }
+      });
+
+      // Save and Cancel buttons
+      $('#saveEditsBtn').on('click', function () {
+        console.log('Save edits button clicked');
+        saveEdits();
+      });
+
+      $('#cancelEditsBtn').on('click', function () {
+        console.log('Cancel edits button clicked');
+        cancelEdits();
+      });
 
       window.calculateTotals = function () {
         console.log('calculateTotals() triggered');
@@ -142,7 +263,7 @@
         }
         const orderedItems = [];
         $('.menu-item:checked').each(function () {
-          const itemName = $(this).parent().text().trim();
+          const itemName = $(this).parent().text().trim().split(' - $')[0];
           const price = parseFloat($(this).attr('data-price'));
           const quantity = parseInt($(this).siblings('.quantity').val()) || 1;
           if (!isNaN(price) && !isNaN(quantity) && quantity > 0) {
@@ -372,6 +493,10 @@
       <input type="checkbox" class="menu-item" data-price="1"> Assorted Fruit - $1
       <input type="number" class="quantity" value="1" min="1">
     </label>
+    <div class="edit-controls button-group">
+      <button type="button" id="saveEditsBtn">Save Edits</button>
+      <button type="button" id="cancelEditsBtn">Cancel Edits</button>
+    </div>
     <div style="margin-bottom: 30px;"></div>
     <label class="centered-label" for="discount">Select Discount:</label>
     <select id="discount">
