@@ -95,8 +95,11 @@
           const $label = $(this).parent();
           const name = $label.text().trim().split(' - $')[0];
           const price = parseFloat($(this).attr('data-price'));
-          originalItems.push({ name, price });
+          if (name && !isNaN(price)) {
+            originalItems.push({ name, price });
+          }
         });
+        console.log('Original items saved:', originalItems);
       }
 
       // Toggle edit mode
@@ -117,19 +120,22 @@
           });
           $('#menuForm').addClass('edit-mode');
           $('.edit-controls').show();
+          console.log('Edit mode enabled');
         } else {
           $('.menu-item').each(function (index) {
-            const $label = $(this).parent();
-            const name = originalItems[index].name;
-            const price = originalItems[index].price;
-            $(this).attr('data-price', price);
-            $label.html(
-              `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
-               <input type="number" class="quantity" value="1" min="1">`
-            );
+            if (originalItems[index]) {
+              const $label = $(this).parent();
+              const { name, price } = originalItems[index];
+              $(this).attr('data-price', price);
+              $label.html(
+                `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
+                 <input type="number" class="quantity" value="1" min="1">`
+              );
+            }
           });
           $('#menuForm').removeClass('edit-mode');
           $('.edit-controls').hide();
+          console.log('Edit mode disabled');
         }
       }
 
@@ -158,13 +164,15 @@
       // Cancel edits
       function cancelEdits() {
         $('.menu-item').each(function (index) {
-          const $label = $(this).parent();
-          const { name, price } = originalItems[index];
-          $(this).attr('data-price', price);
-          $label.html(
-            `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
-             <input type="number" class="quantity" value="1" min="1">`
-          );
+          if (originalItems[index]) {
+            const $label = $(this).parent();
+            const { name, price } = originalItems[index];
+            $(this).attr('data-price', price);
+            $label.html(
+              `<input type="checkbox" class="menu-item" data-price="${price}"> ${name} - $${price}
+               <input type="number" class="quantity" value="1" min="1">`
+            );
+          }
         });
         isEditMode = false;
         $('#menuForm').removeClass('edit-mode');
@@ -193,6 +201,10 @@
             $('#discount option[value="custom"]').text(`Custom Discount (${customDiscount}%)`);
             console.log(`Custom discount set to ${customDiscount}%`);
             alert(`Custom discount set to ${customDiscount}%`);
+            // Recalculate totals if items are selected
+            if ($('.menu-item:checked').length > 0) {
+              window.calculateTotals();
+            }
           } else {
             console.log('Invalid discount input:', discountInput);
             alert('Please enter a valid discount percentage between 0 and 100.');
@@ -236,11 +248,11 @@
 
           if (isNaN(price)) {
             console.warn(`Invalid price for item: ${$checkbox.parent().text().trim()}`);
-            return true;
+            return true; // Skip to next item
           }
           if (isNaN(quantity) || quantity <= 0) {
             console.warn(`Invalid quantity (${quantity}) for item: ${$checkbox.parent().text().trim()}`);
-            return true;
+            return true; // Skip to next item
           }
 
           const itemTotal = price * quantity * (1 - discount / 100);
@@ -314,8 +326,7 @@
               { name: 'Total', value: `$${totalValue.toFixed(2)}`, inline: true },
               { name: 'Commission', value: `$${commission.toFixed(2)}`, inline: true },
               { name: 'Discount Applied', value: `${discount}%`, inline: true },
-              { name: 'Items Ordered', value: ordered
-Items.map(item => `${item.quantity}x ${item.name}`).join('\n') }
+              { name: 'Items Ordered', value: orderedItems.map(item => `${item.quantity}x ${item.name}`).join('\n') }
             ],
             color: 0x00ff00
           }]
@@ -348,7 +359,7 @@ Items.map(item => `${item.quantity}x ${item.name}`).join('\n') }
           resetForm();
         }).fail(function (xhr, status, error) {
           console.error(`Submission error: Status: ${xhr.status}, Error: ${error}, Response: ${xhr.responseText}`);
-          alert('Everything Is Good.');
+          alert('Error submitting order. Check console for details.');
         });
       };
 
@@ -360,6 +371,7 @@ Items.map(item => `${item.quantity}x ${item.name}`).join('\n') }
         $('#discount').val('0');
         $('#discount option[value="custom"]').text('Custom Discount');
         customDiscount = 0;
+        console.log('Form reset');
       };
 
       window.clockIn = function () {
