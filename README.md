@@ -86,6 +86,7 @@
       let clockInTime = null;
       let isEditMode = false;
       let originalItems = [];
+      let customDiscount = 0; // Store custom discount value
 
       // Save original menu items before editing
       function saveOriginalItems() {
@@ -117,7 +118,6 @@
           $('#menuForm').addClass('edit-mode');
           $('.edit-controls').show();
         } else {
-          // Restore original display
           $('.menu-item').each(function (index) {
             const $label = $(this).parent();
             const name = originalItems[index].name;
@@ -173,11 +173,30 @@
         alert('Changes discarded.');
       }
 
-      // Keypress event for Ctrl+Shift+E
+      // Hotkey for edit mode (Ctrl+Shift+E)
       $(document).on('keydown', function (e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'E') {
           console.log('Ctrl+Shift+E pressed, toggling edit mode');
           toggleEditMode();
+        }
+      });
+
+      // Hotkey for custom discount (Ctrl+Shift+D)
+      $(document).on('keydown', function (e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+          console.log('Ctrl+Shift+D pressed, prompting for custom discount');
+          const discountInput = prompt('Enter custom discount percentage (0-100):');
+          const parsedDiscount = parseFloat(discountInput);
+          if (!isNaN(parsedDiscount) && parsedDiscount >= 0 && parsedDiscount <= 100) {
+            customDiscount = parsedDiscount;
+            $('#discount').val('custom');
+            $('#discount option[value="custom"]').text(`Custom Discount (${customDiscount}%)`);
+            console.log(`Custom discount set to ${customDiscount}%`);
+            alert(`Custom discount set to ${customDiscount}%`);
+          } else {
+            console.log('Invalid discount input:', discountInput);
+            alert('Please enter a valid discount percentage between 0 and 100.');
+          }
         }
       });
 
@@ -211,7 +230,7 @@
           const price = parseFloat($checkbox.attr('data-price'));
           const $quantityInput = $checkbox.siblings('.quantity');
           const quantity = parseInt($quantityInput.val()) || 1;
-          const discount = parseFloat($('#discount').val()) || 0;
+          const discount = $('#discount').val() === 'custom' ? customDiscount : parseFloat($('#discount').val()) || 0;
 
           console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`);
 
@@ -277,7 +296,7 @@
         }
         const totalValue = parseFloat(total);
         const commission = parseFloat($('#commission').text());
-        const discount = parseFloat($('#discount').val()) || 0;
+        const discount = $('#discount').val() === 'custom' ? customDiscount : parseFloat($('#discount').val()) || 0;
         const formData = {
           'Employee Name': employeeName,
           Total: totalValue.toFixed(2),
@@ -295,7 +314,8 @@
               { name: 'Total', value: `$${totalValue.toFixed(2)}`, inline: true },
               { name: 'Commission', value: `$${commission.toFixed(2)}`, inline: true },
               { name: 'Discount Applied', value: `${discount}%`, inline: true },
-              { name: 'Items Ordered', value: orderedItems.map(item => `${item.quantity}x ${item.name}`).join('\n') }
+              { name: 'Items Ordered', value: ordered
+Items.map(item => `${item.quantity}x ${item.name}`).join('\n') }
             ],
             color: 0x00ff00
           }]
@@ -338,6 +358,8 @@
         $('.quantity').val(1);
         $('#total, #commission').text('');
         $('#discount').val('0');
+        $('#discount option[value="custom"]').text('Custom Discount');
+        customDiscount = 0;
       };
 
       window.clockIn = function () {
@@ -503,6 +525,7 @@
       <option value="0">No Discount</option>
       <option value="25">25% Discount (Employee Discount)</option>
       <option value="15">15% Discount (PD & EMS)</option>
+      <option value="custom">Custom Discount</option>
     </select>
     <div style="margin-bottom: 30px;"></div>
     <label class="centered-label" for="employeeName">Employee Name:</label>
