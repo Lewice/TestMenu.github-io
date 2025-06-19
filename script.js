@@ -115,9 +115,11 @@ $(document).ready(function () {
       const parsedDiscount = parseFloat(discountInput);
       if (!isNaN(parsedDiscount) && parsedDiscount >= 0 && parsedDiscount <= 100) {
         customDiscount = parsedDiscount;
+        // Update dropdown to show custom discount temporarily
         $('#discount').val('0'); // Reset to "No Discount" to avoid confusion
         console.log(`Custom discount set to ${customDiscount}%`);
         alert(`Custom discount set to ${customDiscount}%`);
+        // Recalculate totals if items are selected
         if ($('.menu-item:checked').length > 0) {
           window.calculateTotals();
         }
@@ -158,6 +160,7 @@ $(document).ready(function () {
       const price = parseFloat($checkbox.attr('data-price'));
       const $quantityInput = $checkbox.siblings('.quantity');
       const quantity = parseInt($quantityInput.val()) || 1;
+      // Use customDiscount if set, otherwise use dropdown value
       const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
 
       console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`);
@@ -194,7 +197,7 @@ $(document).ready(function () {
     console.log('Calculate button found in DOM');
   }
 
-  window.SubForm = async function () {
+  window.SubForm = function () {
     console.log('SubForm() triggered');
     const total = $('#total').text().trim();
     if (!total) {
@@ -224,15 +227,15 @@ $(document).ready(function () {
     }
     const totalValue = parseFloat(total);
     const commission = parseFloat($('#commission').text());
+    // Use customDiscount if set, otherwise use dropdown value
     const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
-
-    // Data to send to Supabase (employee name and commission)
-    const databaseData = {
-      employeeName: employeeName,
-      commission: commission.toFixed(2)
+    const formData = {
+      'Employee Name': employeeName,
+      Total: totalValue.toFixed(2),
+      Commission: commission.toFixed(2),
+      'Items Ordered': JSON.stringify(orderedItems),
+      'Discount Applied': discount
     };
-
-    // Data to send to Discord (full order details)
     const discordData = {
       username: 'Receipts',
       content: `New order submitted by ${employeeName}`,
@@ -248,42 +251,36 @@ $(document).ready(function () {
         color: 0x00ff00
       }]
     };
-
-    try {
-      // Send to Supabase
-      console.log('Submitting data to Supabase:', databaseData);
-      await $.ajax({
-        url: 'https://wdgcrhkdttqzsbaoithz.supabase.co', // Replace with your Supabase Project URL
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(databaseData),
+    console.log('Submitting form data:', formData);
+    console.log('Submitting Discord data:', discordData);
+    $.when(
+      $.ajax({
+        url: 'https://api.apispreadsheets.com/data/jjm1z1IBtUX8PEIg/',
+        type: 'post',
+        data: formData,
         headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'sb_secret_s8Ccf-x-rND_gaKOtXHwzQ_RlHZAl1k', // Replace with your Supabase anon key
-          'Authorization': 'sb_secret_s8Ccf-x-rND_gaKOtXHwzQ_RlHZAl1k' // Same anon key
+          accessKey: 'c03675ad25836163cb40f1ca95c7039a',
+          secretKey: 'aeb0aa04d2c29191f458d2ce91517ec8',
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-      });
-      console.log('Supabase submission successful');
-
-      // Send to Discord
-      console.log('Submitting Discord data:', discordData);
-      await $.ajax({
+      }),
+      $.ajax({
         url: 'https://discord.com/api/webhooks/1385235378822447206/bM0xYWsV6MftJEydlXuKy1YEEvJOamAvpFviopUik_7qN6b3ysfEmcu_1Na9z6-_126P',
-        type: 'POST',
+        type: 'post',
         contentType: 'application/json',
         data: JSON.stringify(discordData),
         headers: {
           'Content-Type': 'application/json'
         }
-      });
-      console.log('Discord webhook sent successfully');
-
-      alert('Order submitted successfully to database and Discord!');
+      })
+    ).then(function () {
+      console.log('Order submitted successfully');
+      alert('Order submitted successfully!');
       resetForm();
-    } catch (error) {
-      console.error('Submission error:', error);
+    }).fail(function (xhr, status, error) {
+      console.error(`Submission error: Status: ${xhr.status}, Error: ${error}, Response: ${xhr.responseText}`);
       alert('Error submitting order. Check console for details.');
-    }
+    });
   };
 
   window.resetForm = function () {
@@ -296,7 +293,7 @@ $(document).ready(function () {
     console.log('Form reset');
   };
 
-  window.clockIn = async function () {
+  window.clockIn = function () {
     console.log('clockIn() triggered');
     const employeeName = $('#employeeName').val().trim();
     if (!employeeName) {
@@ -315,15 +312,6 @@ $(document).ready(function () {
       hour12: true
     }) || 'Unknown Time';
     console.log(`Clock In: Employee: ${employeeName}, Time: ${localTime}`);
-
-    // Data for Supabase clock event
-    const clockData = {
-      employeeName: employeeName,
-      eventType: 'clock_in',
-      timestamp: clockInTime.toISOString()
-    };
-
-    // Data for Discord
     const discordData = {
       username: 'Time Manager',
       embeds: [{
@@ -335,43 +323,27 @@ $(document).ready(function () {
         color: 0x0000ff
       }]
     };
-
-    try {
-      // Send to Supabase
-      console.log('Submitting clock-in to Supabase:', clockData);
-      await $.ajax({
-        url: 'https://[PROJECT_ID].supabase.co/rest/v1/clock_events', // Replace with your Supabase Project URL
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(clockData),
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': '[YOUR_SUPABASE_ANON_KEY]', // Replace with your Supabase anon key
-          'Authorization': 'Bearer [YOUR_SUPABASE_ANON_KEY]' // Same anon key
-        }
-      });
-      console.log('Supabase clock-in submission successful');
-
-      // Send to Discord
-      console.log('Sending clock-in webhook:', discordData);
-      await $.ajax({
-        url: 'https://discord.com/api/webhooks/1385235711653052478/JqR9S91n2mFWE9BmLXsMNPjgudbR8fW6Ae-14l36fGepCpbN6MPDAS7Vre3nytWIQmmY',
-        method: 'POST',
-        contentType: 'application/json',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(discordData)
-      });
-      console.log('Clock-in webhook sent successfully');
-      alert(`${employeeName} successfully clocked in at ${localTime}!`);
-    } catch (error) {
-      console.error('Clock-in submission error:', error);
-      alert('Error clocking in. Check console for details.');
-    }
+    console.log('Sending clock-in webhook:', discordData);
+    $.ajax({
+      url: 'https://discord.com/api/webhooks/1385235711653052478/JqR9S91n2mFWE9BmLXsMNPjgudbR8fW6Ae-14l36fGepCpbN6MPDAS7Vre3nytWIQmmY',
+      method: 'POST',
+      contentType: 'application/json',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(discordData),
+      success: function () {
+        console.log('Clock-in webhook sent successfully');
+        alert(`${employeeName} successfully clocked in at ${localTime}!`);
+      },
+      error: function (xhr, status, error) {
+        console.error(`Clock-in webhook failed: Status: ${xhr.status}, Error: ${error}, Response: ${xhr.responseText}`);
+        alert('Error clocking in. Webhook may be invalid or unreachable. Check console for details.');
+      }
+    });
   };
 
-  window.clockOut = async function () {
+  window.clockOut = function () {
     console.log('clockOut() triggered');
     const employeeName = $('#employeeName').val().trim();
     if (!employeeName) {
@@ -395,18 +367,10 @@ $(document).ready(function () {
       hour12: true
     }) || 'Unknown Time';
     const durationMs = clockOutTime - clockInTime;
-    const durationMinutes = Math.floor(durationMs / (1000 * 60));
-    console.log(`Clock Out: Employee: ${employeeName}, Time: ${localTime}, Duration: ${durationMinutes} minutes`);
-
-    // Data for Supabase clock event
-    const clockData = {
-      employeeName: employeeName,
-      eventType: 'clock_out',
-      timestamp: clockOutTime.toISOString(),
-      duration: durationMinutes
-    };
-
-    // Data for Discord
+    const hours = Math.floor(durationMs / (1000 * 60 * 60));
+    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+    const durationText = hours > 0 ? `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''}` : `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    console.log(`Clock Out: Employee: ${employeeName}, Time: ${localTime}, Duration: ${durationText}`);
     const discordData = {
       username: 'West Vinewood Clock',
       embeds: [{
@@ -414,45 +378,29 @@ $(document).ready(function () {
         fields: [
           { name: 'Employee Name', value: employeeName, inline: true },
           { name: 'Time', value: localTime, inline: true },
-          { name: 'Duration', value: durationMinutes > 60 ? `${Math.floor(durationMinutes / 60)} hour${Math.floor(durationMinutes / 60) !== 1 ? 's' : ''} and ${durationMinutes % 60} minute${durationMinutes % 60 !== 1 ? 's' : ''}` : `${durationMinutes} minute${durationMinutes !== 1 ? 's' : ''}` },
+          { name: 'Duration', value: durationText, inline: true }
         ],
         color: 0xff0000
       }]
     };
-
-    try {
-      // Send to Supabase
-      console.log('Submitting clock-out to Supabase:', clockData);
-      await $.ajax({
-        url: 'https://[PROJECT_ID].supabase.co/rest/v1/clock_events', // Replace with your Supabase Project URL
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(clockData),
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': '[YOUR_SUPABASE_ANON_KEY]', // Replace with your Supabase anon key
-          'Authorization': 'Bearer [YOUR_SUPABASE_ANON_KEY]' // Same anon key
-        }
-      });
-      console.log('Supabase clock-out submission successful');
-
-      // Send to Discord
-      console.log('Sending clock-out webhook:', discordData);
-      await $.ajax({
-        url: 'https://discord.com/api/webhooks/1385235711653052478/JqR9S91n2mFWE9BmLXsMNPjgudbR8fW6Ae-14l36fGepCpbN6MPDAS7Vre3nytWIQmmY',
-        method: 'POST',
-        contentType: 'application/json',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(discordData)
-      });
-      console.log('Clock-out webhook sent successfully');
-      alert(`${employeeName} successfully clocked out at ${localTime}! Duration: ${durationMinutes > 60 ? `${Math.floor(durationMinutes / 60)} hour${Math.floor(durationMinutes / 60) !== 1 ? 's' : ''} and ${durationMinutes % 60} minute${durationMinutes % 60 !== 1 ? 's' : ''}` : `${durationMinutes} minute${durationMinutes !== 1 ? 's' : ''}`}`);
-      clockInTime = null;
-    } catch (error) {
-      console.error('Clock-out submission error:', error);
-      alert('Error clocking out. Check console for details.');
-    }
+    console.log('Sending clock-out webhook:', discordData);
+    $.ajax({
+      url: 'https://discord.com/api/webhooks/1385235711653052478/JqR9S91n2mFWE9BmLXsMNPjgudbR8fW6Ae-14l36fGepCpbN6MPDAS7Vre3nytWIQmmY',
+      method: 'POST',
+      contentType: 'application/json',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(discordData),
+      success: function () {
+        console.log('Clock-out webhook sent successfully');
+        alert(`${employeeName} successfully clocked out at ${localTime}! Duration: ${durationText}`);
+        clockInTime = null;
+      },
+      error: function (xhr, status, error) {
+        console.error(`Clock-out webhook failed: Status: ${xhr.status}, Error: ${error}, Response: ${xhr.responseText}`);
+        alert('Error clocking out. Webhook may be invalid or unreachable. Check console for details.');
+      }
+    });
   };
 });
