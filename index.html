@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacific Bluffs</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <h2>Test Menu</h2>
+  <form id="menuForm">
+    <h3>Fruit</h3>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="8"> Strawberry - $8
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="6"> Banana - $6
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="6"> Kiwi - $6
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="6"> Tomato - $6
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="7"> Watermelon - $7
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="7"> Bag - $7
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="1"> Melon - $1
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="2"> Blueberries - $2
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <label>
+      <input type="checkbox" class="menu-item" data-price="1"> Assorted Fruit - $1
+      <input type="number" class="quantity" value="1" min="1">
+    </label>
+    <div class="edit-controls button-group">
+      <button type="button" id="saveEditsBtn">Save Edits</button>
+      <button type="button" id="cancelEditsBtn">Cancel Edits</button>
+    </div>
+    <div style="margin-bottom: 30px;"></div>
+    <label class="centered-label" for="discount">Select Discount:</label>
+    <select id="discount">
+      <option value="0">No Discount</option>
+      <option value="25">25% Discount (Employee Discount)</option>
+      <option value="15">15% Discount (PD & EMS)</option>
+    </select>
+    <div style="margin-bottom: 30px;"></div>
+    <label class="centered-label" for="employeeName">Employee Name:</label>
+    <input type="text" id="employeeName" required>
+    <div style="margin-bottom: 30px;"></div>
+    <p>Total: $<span id="total"></span></p>
+    <p>Commission (25%): $<span id="commission"></span></p>
+    <div style="margin-bottom: 30px;"></div>
+    <div class="button-group">
+      <button type="button" id="calculateBtn">Calculate</button>
+      <button type="button" onclick="SubForm()">Submit</button>
+      <button type="button" onclick="resetForm()">Reset</button>
+      <button type="button" onclick="clockIn()">Clock In</button>
+      <button type="button" onclick="clockOut()">Clock Out</button>
+    </div>
+  </form>
+</body>
+</html>

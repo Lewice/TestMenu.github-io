@@ -1,0 +1,73 @@
+body, h2, h3, form, label, p, button, select, input {
+  font-size: 16px;
+  margin-right: 10px;
+}
+label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 10px;
+}
+body, h2, Norfolk, form {
+  text-align: center;
+}
+p {
+  text-align: center;
+  margin: 0;
+}
+button {
+  margin-top: 10px;
+  margin-right: 5px;
+}
+body, h2, h3 {
+  font-weight: bold;
+}
+body {
+  background-image: url('FallingFruit.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #f0f0f0;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+h2 {
+  color: cyan;
+}
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+form {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.quantity {
+  width: 60px;
+  margin-left: auto;
+}
+.centered-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.edit-mode input[type="text"] {
+  width: 150px;
+  margin-right: 5px;
+}
+.edit-mode input[type="number"] {
+  width: 60px;
+}
+.edit-controls {
+  margin-top: 20px;
+  display: none;
+}
+.edit-mode .edit-controls {
+  display: flex;
+}
