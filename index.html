@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test Menu</title>
   <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="styles.css">
   <script src="script.js"></script>
 </head>
 <body>
+  <button id="historyBtn" class="history-btn" title="View Order History"><i class="fas fa-history"></i></button>
   <h2>Test Menu</h2>
   <form id="menuForm">
     <h3>Fruit</h3>
@@ -74,5 +76,12 @@
       <button type="button" onclick="clockOut()">Clock Out</button>
     </div>
   </form>
+  <div id="historyModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Order History</h3>
+      <div id="historyContent"></div>
+    </div>
+  </div>
 </body>
 </html>
