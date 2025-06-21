@@ -4,7 +4,7 @@ $(document).ready(function () {
   let clockInTime = null;
   let isEditMode = false;
   let originalItems = [];
-  let customDiscount = null; // Store custom discount value (null means no custom discount)
+  let customDiscount = null;
 
   // Save original menu items before editing
   function saveOriginalItems() {
@@ -115,11 +115,9 @@ $(document).ready(function () {
       const parsedDiscount = parseFloat(discountInput);
       if (!isNaN(parsedDiscount) && parsedDiscount >= 0 && parsedDiscount <= 100) {
         customDiscount = parsedDiscount;
-        // Update dropdown to show custom discount temporarily
-        $('#discount').val('0'); // Reset to "No Discount" to avoid confusion
+        $('#discount').val('0');
         console.log(`Custom discount set to ${customDiscount}%`);
         alert(`Custom discount set to ${customDiscount}%`);
-        // Recalculate totals if items are selected
         if ($('.menu-item:checked').length > 0) {
           window.calculateTotals();
         }
@@ -160,18 +158,17 @@ $(document).ready(function () {
       const price = parseFloat($checkbox.attr('data-price'));
       const $quantityInput = $checkbox.siblings('.quantity');
       const quantity = parseInt($quantityInput.val()) || 1;
-      // Use customDiscount if set, otherwise use dropdown value
       const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
 
       console.log(`Item: ${$checkbox.parent().text().trim()}, Price: ${price}, Quantity: ${quantity}, Discount: ${discount}%`);
 
       if (isNaN(price)) {
         console.warn(`Invalid price for item: ${$checkbox.parent().text().trim()}`);
-        return true; // Skip to next item
+        return true;
       }
       if (isNaN(quantity) || quantity <= 0) {
         console.warn(`Invalid quantity (${quantity}) for item: ${$checkbox.parent().text().trim()}`);
-        return true; // Skip to next item
+        return true;
       }
 
       const itemTotal = price * quantity * (1 - discount / 100);
@@ -196,6 +193,56 @@ $(document).ready(function () {
   } else {
     console.log('Calculate button found in DOM');
   }
+
+  // Order history functionality
+  function saveOrderToHistory(orderData) {
+    let orders = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+    orders.push(orderData);
+    localStorage.setItem('orderHistory', JSON.stringify(orders));
+    console.log('Order saved to history:', orderData);
+  }
+
+  function displayOrderHistory() {
+    const orders = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+    const $historyContent = $('#historyContent');
+    $historyContent.empty();
+    if (orders.length === 0) {
+      $historyContent.append('<p>No orders found.</p>');
+      return;
+    }
+    orders.forEach((order, index) => {
+      const orderHtml = `
+        <div class="order-entry">
+          <h4>Order #${index + 1} - ${new Date(order.timestamp).toLocaleString()}</h4>
+          <p><strong>Employee:</strong> ${order.employeeName}</p>
+          <p><strong>Total:</strong> $${order.total}</p>
+          <p><strong>Commission:</strong> $${order.commission}</p>
+          <p><strong>Discount:</strong> ${order.discount}%</p>
+          <p><strong>Items:</strong></p>
+          <ul>
+            ${order.items.map(item => `<li>${item.quantity}x ${item.name} ($${item.price})</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      $historyContent.append(orderHtml);
+    });
+  }
+
+  $('#historyBtn').on('click', function () {
+    console.log('History button clicked');
+    $('#historyModal').show();
+    displayOrderHistory();
+  });
+
+  $('.close').on('click', function () {
+    $('#historyModal').hide();
+  });
+
+  $(window).on('click', function (event) {
+    if ($(event.target).is('#historyModal')) {
+      $('#historyModal').hide();
+    }
+  });
 
   window.SubForm = function () {
     console.log('SubForm() triggered');
@@ -227,8 +274,15 @@ $(document).ready(function () {
     }
     const totalValue = parseFloat(total);
     const commission = parseFloat($('#commission').text());
-    // Use customDiscount if set, otherwise use dropdown value
     const discount = customDiscount !== null ? customDiscount : parseFloat($('#discount').val()) || 0;
+    const orderData = {
+      timestamp: new Date().toISOString(),
+      employeeName: employeeName,
+      total: totalValue.toFixed(2),
+      commission: commission.toFixed(2),
+      items: orderedItems,
+      discount: discount
+    };
     const formData = {
       'Employee Name': employeeName,
       Total: totalValue.toFixed(2),
@@ -253,6 +307,7 @@ $(document).ready(function () {
     };
     console.log('Submitting form data:', formData);
     console.log('Submitting Discord data:', discordData);
+    saveOrderToHistory(orderData);
     $.when(
       $.ajax({
         url: 'https://api.apispreadsheets.com/data/jjm1z1IBtUX8PEIg/',
