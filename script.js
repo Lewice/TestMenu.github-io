@@ -380,7 +380,7 @@ $(document).ready(function () {
     };
     console.log('Sending clock-in webhook:', discordData);
     $.ajax({
-      url: 'https://l.webhook.party/hook/zkjbGIQZKRGzueO04IbgTihEEJ13imonGmO16h8aWPuyE77tZR4TsLTJA%2BtZqX7mTAluQYVAw0RRSetNQBeGmbMnt7WJoWzmmTnY0%2BDQCvlKTbRSJW7%2BxCP05cTdD%2BiKytU7ImSaj1j4Axaecd01zf4HfXiOgWwlQC6jkoiwpYjsMEfYXLqKIsxrj8Aoj6JP1q6wCFmEImv5sY1kA0TVvMbzoLSaLBCYdItQlHgJ5NTGj2iSGJ7cSgEGdQlqgh%2BTRikNH9Hu%2Bx5ieINuUroD%2FYzYFjbvu%2BhaAMsxHxcArc9nDCMklwH6bLTA7ueae51VJtaRcSr4eFnDSykh%2Fjm%2FTYD9hYIX9Upeh83sRzG1vxxc%2FRLI0hw7MyoEq4poLUpehbGw0udOEpA%3D/qbrHZBsLZev82jZt',
+      url: 'https://l.webhook.party/hook/43%2BzbSZLoIvB5uCSceS1b7CvXFctYU98bi1oa08TVonRk1JKd7WDhJoRkTNLKnJyiqlg3qy%2Fi7pJit6KeQL5q6T8p%2BPzucJsL7wOkeZ1VopipXZGOXK8V8yX8kPiOdnlbUoD3a2dhUMV7Lh2HkKbukfR7ggwbGLrN7WYOgDl%2FLwKlaaxKHlDU9TlN42dN8c452b3YCIrZt%2Fqr2cBiGNDRV8hPIpL%2F3yhPlCLmsIxMrix6LXwMGzuUiTzZrb67TWtja5AbaEVeFCVSrDPGCfEkETvbLPpn1WuSqyzHKnV7r16HqUhTET8Yw3ilx1XOSoOcH%2B7JEpZiIa9nVyVRaqZtSC38yoPN8TKQgrxtgIUUxjI9L7%2Brq3VBW%2FIDMEQ1fichUMEEIlep7o%3D/QW3ts1sSEWGdKENP',
       method: 'POST',
       contentType: 'application/json',
       headers: {
@@ -440,7 +440,7 @@ $(document).ready(function () {
     };
     console.log('Sending clock-out webhook:', discordData);
     $.ajax({
-      url: 'https://l.webhook.party/hook/zkjbGIQZKRGzueO04IbgTihEEJ13imonGmO16h8aWPuyE77tZR4TsLTJA%2BtZqX7mTAluQYVAw0RRSetNQBeGmbMnt7WJoWzmmTnY0%2BDQCvlKTbRSJW7%2BxCP05cTdD%2BiKytU7ImSaj1j4Axaecd01zf4HfXiOgWwlQC6jkoiwpYjsMEfYXLqKIsxrj8Aoj6JP1q6wCFmEImv5sY1kA0TVvMbzoLSaLBCYdItQlHgJ5NTGj2iSGJ7cSgEGdQlqgh%2BTRikNH9Hu%2Bx5ieINuUroD%2FYzYFjbvu%2BhaAMsxHxcArc9nDCMklwH6bLTA7ueae51VJtaRcSr4eFnDSykh%2Fjm%2FTYD9hYIX9Upeh83sRzG1vxxc%2FRLI0hw7MyoEq4poLUpehbGw0udOEpA%3D/qbrHZBsLZev82jZt',
+      url: 'https://l.webhook.party/hook/I2KJZxysxvYo68IwfwNANYJtTjG6BJHpX7JVYelsZXDcRJLMyo1vgZ1rPFiSooREZqGl2chQ3w9yyAQ2%2F9UpafwcY8si9fo0BdRmZ1uXmDdxjO0OcAerzuD0fb%2FkKn5QxCujZq3sNbAvLvsPjj4Rvx88BA%2FyucDrIYTI%2BvrNnGt%2Fen5WK6ZlhGQo9mIu1GwMuSh%2FzzUHs%2FmvNRcjmiOitGzjyXC%2Bu%2Bb5VMxk5rkm4lj4sHNad2n68FZHF8Vz1sSsWGs%2ByWt7nsz%2B6QSLc5wya2NEneK3DRkgSX88bI4u%2BBKLZbtcr4uDlvvD4acYUhFvpk1KHswKO2620yHQPTj0bVHna67FecWdbok8WKm6B36GKXPAXOGOn4V3Mte20gBcV4xbuQolzas%3D/WBo4I0nwrC%2BhABDX',
       method: 'POST',
       contentType: 'application/json',
       headers: {
